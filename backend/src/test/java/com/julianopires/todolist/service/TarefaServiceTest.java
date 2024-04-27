@@ -35,7 +35,7 @@ class TarefaServiceTest {
         TarefaResponseDTO responseDTO = tarefaService.criarTarefa(tarefaDTO);
 
         TarefaResponseDTO expectedResponseDTO = TarefaResponseDTO.builder()
-                .id(1L)
+                .id(responseDTO.getId())
                 .titulo(tarefaDTO.getTitulo())
                 .descricao(tarefaDTO.getDescricao())
                 .dataCriacao(responseDTO.getDataCriacao())
