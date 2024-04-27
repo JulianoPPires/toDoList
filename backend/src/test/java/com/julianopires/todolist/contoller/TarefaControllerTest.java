@@ -2,6 +2,7 @@ package com.julianopires.todolist.contoller;
 
 import com.julianopires.todolist.dto.request.TarefaDTO;
 import com.julianopires.todolist.dto.response.TarefaResponseDTO;
+import com.julianopires.todolist.fixture.TarefaControllerFixture;
 import com.julianopires.todolist.service.TarefaService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
@@ -9,26 +10,64 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
+@AutoConfigureMockMvc
+@SpringBootTest
 class TarefaControllerTest {
+
+    @Autowired
+    MockMvc mockMvc;
 
     @Mock
     private TarefaService tarefaService;
 
     @InjectMocks
     private TarefaController tarefaController;
+
+    @Test
+    public void testRotaVizualizarTarefas() throws Exception {
+        this.mockMvc.perform(get("/api/v1/tarefas/visualizar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+    }
+
+    @Test
+    public void testRotaAdicionarTarefas() throws Exception {
+        this.mockMvc.perform(post("/api/v1/tarefas/adicionar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TarefaControllerFixture.jsonAdicionarTarefa())
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(content().json(TarefaControllerFixture.retoronoJsonAdicionarTarefa()));
+    }
 
     @Test
     void visualizarTarefas_DeveRetornarListaDeTarefas() {
