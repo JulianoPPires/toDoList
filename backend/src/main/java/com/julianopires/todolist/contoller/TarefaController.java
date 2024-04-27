@@ -5,7 +5,6 @@ import com.julianopires.todolist.dto.response.TarefaResponseDTO;
 import com.julianopires.todolist.service.TarefaService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -14,7 +14,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 public class TarefaExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-        return ResponseEntity.badRequest().body("Requisição inválida - Verifique os dados enviados");
+        return ResponseEntity.badRequest().body("Requisição inválida - Verifique os dados enviados" + ex.getMessage());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
