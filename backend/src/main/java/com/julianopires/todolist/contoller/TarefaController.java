@@ -8,11 +8,14 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/tarefas")
+@Tag(name = "Tarefas")
 public class TarefaController {
     private final TarefaService tarefaService;
 
@@ -20,17 +23,20 @@ public class TarefaController {
         this.tarefaService = tarefaService;
     }
 
+    @Operation(summary = "Visualizar todas tarefas")
     @GetMapping("/visualizar")
     public ResponseEntity<List<TarefaResponseDTO>> visualizarTarefas() {
         List<TarefaResponseDTO> tarefasDTO = tarefaService.buscarTodasTarefas();
         return ResponseEntity.ok(tarefasDTO);
     }
 
+    @Operation(summary = "Adicionar tarefa")
     @PostMapping("/adicionar")
     public ResponseEntity<TarefaResponseDTO> adicionarTarefa(@RequestBody @Valid TarefaDTO tarefaDTO) {
         return new ResponseEntity<>(tarefaService.criarTarefa(tarefaDTO), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Editar tarefa")
     @PutMapping("/editar/{id}")
     public ResponseEntity<TarefaResponseDTO> editarTarefa(@RequestBody @Valid TarefaDTO tarefaDTO, @PathVariable Long id) {
         try {
@@ -41,6 +47,7 @@ public class TarefaController {
         }
     }
 
+    @Operation(summary = "Excluir tarefa")
     @DeleteMapping("excluir/{id}")
     public ResponseEntity<TarefaResponseDTO> excluirTarefa(@PathVariable Long id) {
         try {
