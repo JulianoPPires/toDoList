@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,9 +39,9 @@ public class TarefaService {
     }
 
     @Transactional
-    public TarefaResponseDTO editarTarefa(TarefaDTO tarefaDTO) {
+    public TarefaResponseDTO editarTarefa(TarefaDTO tarefaDTO, Long id) {
         Tarefa tarefa = modelMapper.map(tarefaDTO, Tarefa.class);
-        Optional<Tarefa> optionalTarefa = this.tarefaRepository.findById(tarefa.getId());
+        Optional<Tarefa> optionalTarefa = this.tarefaRepository.findById(id);
         if (optionalTarefa.isPresent()) {
             Tarefa tarefaEditada = optionalTarefa.get();
             tarefaEditada.setTitulo(tarefa.getTitulo());
@@ -60,8 +61,16 @@ public class TarefaService {
         if (this.tarefaRepository.existsById(id)) {
             this.tarefaRepository.deleteById(id);
         } else {
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("Tarefa com o ID " + id + " não encontrada");
         }
     }
+
+    public TarefaResponseDTO buscarTarefa(Long id) {
+        Optional<Tarefa> tarefaSalvaOptional = this.tarefaRepository.findById(id);
+        Tarefa tarefaSalva = tarefaSalvaOptional.orElseThrow(EntityNotFoundException::new);
+        return modelMapper.map(tarefaSalva, TarefaResponseDTO.class);
+    }
+
+
 }
 

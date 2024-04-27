@@ -5,6 +5,7 @@ import com.julianopires.todolist.dto.response.TarefaResponseDTO;
 import com.julianopires.todolist.service.TarefaService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +32,10 @@ public class TarefaController {
         return new ResponseEntity<>(tarefaService.criarTarefa(tarefaDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/editar")
-    public ResponseEntity<TarefaResponseDTO> editarTarefa(@RequestBody @Valid TarefaDTO tarefaDTO) {
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<TarefaResponseDTO> editarTarefa(@RequestBody @Valid TarefaDTO tarefaDTO, @NotBlank @PathVariable Long id) {
         try {
-            TarefaResponseDTO tarefaResponseDTO = tarefaService.editarTarefa(tarefaDTO);
+            TarefaResponseDTO tarefaResponseDTO = tarefaService.editarTarefa(tarefaDTO, id);
             return ResponseEntity.ok(tarefaResponseDTO);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -42,9 +43,9 @@ public class TarefaController {
     }
 
     @DeleteMapping("excluir/{id}")
-    public ResponseEntity<TarefaResponseDTO> excluirTarefa(@PathVariable String id) {
+    public ResponseEntity<TarefaResponseDTO> excluirTarefa(@PathVariable Long id) {
         try {
-            tarefaService.removerTarefa(Long.parseLong(id));
+            tarefaService.removerTarefa(id);
             return ResponseEntity.noContent().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();

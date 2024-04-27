@@ -1,21 +1,25 @@
 package com.julianopires.todolist.dto.request;
 
-import com.julianopires.todolist.model.StatusTarefa;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TarefaDTO {
     @NotBlank(message = "O campo 'título' não pode ser nulo ou vazio.")
     private String titulo;
-    @NotBlank(message = "O campo 'descricao' não pode ser nulo ou vazio.")
     private String descricao;
     private Date dataCriacao;
     private Date dataConclusao;
     @Enumerated(EnumType.STRING)
-    private StatusTarefa status;
+    private StatusTarefaDTO status;
 }
