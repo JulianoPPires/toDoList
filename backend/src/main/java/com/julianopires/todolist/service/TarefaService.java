@@ -2,6 +2,7 @@ package com.julianopires.todolist.service;
 
 import com.julianopires.todolist.dto.request.TarefaDTO;
 import com.julianopires.todolist.dto.response.TarefaResponseDTO;
+import com.julianopires.todolist.model.StatusTarefa;
 import com.julianopires.todolist.model.Tarefa;
 import com.julianopires.todolist.repository.TarefaRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -9,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,24 +35,36 @@ public class TarefaService {
     }
 
     public TarefaResponseDTO criarTarefa(TarefaDTO tarefaDTO) {
+        //se vier a data criacao do front eu uso senao seto direto no banckend
         Tarefa tarefa = modelMapper.map(tarefaDTO, Tarefa.class);
+        if (tarefaDTO.getDataCriacao() == null) {
+            tarefa.setDataCriacao(new Date());
+        }
         Tarefa tarefaSalva = tarefaRepository.save(tarefa);
         return modelMapper.map(tarefaSalva, TarefaResponseDTO.class);
     }
 
     @Transactional
     public TarefaResponseDTO editarTarefa(TarefaDTO tarefaDTO, Long id) {
-        Tarefa tarefa = modelMapper.map(tarefaDTO, Tarefa.class);
         Optional<Tarefa> optionalTarefa = this.tarefaRepository.findById(id);
         if (optionalTarefa.isPresent()) {
-            Tarefa tarefaEditada = optionalTarefa.get();
-            tarefaEditada.setTitulo(tarefa.getTitulo());
-            tarefaEditada.setDescricao(tarefa.getDescricao());
-            tarefaEditada.setDataCriacao(tarefa.getDataCriacao());
-            tarefaEditada.setDataConclusao(tarefa.getDataConclusao());
-            tarefaEditada.setStatus(tarefa.getStatus());
-            Tarefa tarefaSalva = tarefaRepository.save(tarefaEditada);
-            return modelMapper.map(tarefaSalva, TarefaResponseDTO.class);
+            Tarefa tarefaExistente = optionalTarefa.get();
+            if (tarefaDTO.getTitulo() != null && !tarefaDTO.getTitulo().equals(tarefaExistente.getTitulo())) {
+                tarefaExistente.setTitulo(tarefaDTO.getTitulo());
+            }
+            if (tarefaDTO.getDescricao() != null && !tarefaDTO.getDescricao().equals(tarefaExistente.getDescricao())) {
+                tarefaExistente.setDescricao(tarefaDTO.getDescricao());
+            }
+            if (tarefaDTO.getStatus() != null && !tarefaDTO.getStatus().name().equals(tarefaExistente.getStatus().name())) {
+                tarefaExistente.setStatus(StatusTarefa.valueOf(tarefaDTO.getStatus().name()));
+            }
+            if (tarefaDTO.getDataCriacao() != null && !tarefaDTO.getDataCriacao().equals(tarefaExistente.getDataCriacao())) {
+                tarefaExistente.setDataCriacao(tarefaDTO.getDataCriacao());
+            }
+            if (tarefaDTO.getDataConclusao() != null && !tarefaDTO.getDataConclusao().equals(tarefaExistente.getDataConclusao())) {
+                tarefaExistente.setDataConclusao(tarefaDTO.getDataConclusao());
+            }
+            return modelMapper.map(this.tarefaRepository.save(tarefaExistente), TarefaResponseDTO.class);
         } else {
             throw new EntityNotFoundException();
         }
@@ -63,12 +77,6 @@ public class TarefaService {
         } else {
             throw new EntityNotFoundException("Tarefa com o ID " + id + " não encontrada");
         }
-    }
-
-    public TarefaResponseDTO buscarTarefa(Long id) {
-        Optional<Tarefa> tarefaSalvaOptional = this.tarefaRepository.findById(id);
-        Tarefa tarefaSalva = tarefaSalvaOptional.orElseThrow(EntityNotFoundException::new);
-        return modelMapper.map(tarefaSalva, TarefaResponseDTO.class);
     }
 
 

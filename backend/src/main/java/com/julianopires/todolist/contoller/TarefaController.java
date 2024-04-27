@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tarefas")
+@RequestMapping("/api/v1/tarefas")
 public class TarefaController {
     private final TarefaService tarefaService;
 
@@ -33,7 +33,7 @@ public class TarefaController {
     }
 
     @PutMapping("/editar/{id}")
-    public ResponseEntity<TarefaResponseDTO> editarTarefa(@RequestBody @Valid TarefaDTO tarefaDTO, @NotBlank @PathVariable Long id) {
+    public ResponseEntity<TarefaResponseDTO> editarTarefa(@RequestBody @Valid TarefaDTO tarefaDTO, @PathVariable Long id) {
         try {
             TarefaResponseDTO tarefaResponseDTO = tarefaService.editarTarefa(tarefaDTO, id);
             return ResponseEntity.ok(tarefaResponseDTO);

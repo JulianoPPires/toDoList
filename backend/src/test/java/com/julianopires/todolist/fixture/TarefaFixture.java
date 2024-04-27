@@ -14,8 +14,6 @@ public class TarefaFixture {
         return TarefaDTO.builder()
                 .titulo("Título da tarefa")
                 .descricao("Descrição da tarefa")
-                .dataCriacao(new Date(2022 - 1900, 3, 22, 15, 30, 0))
-                .dataConclusao(null)
                 .status(StatusTarefaDTO.PENDENTE)
                 .build();
 
@@ -26,8 +24,6 @@ public class TarefaFixture {
         return TarefaDTO.builder()
                 .titulo("Título da tarefa editada")
                 .descricao("Descrição da tarefa editada")
-                .dataCriacao(new Date(2022 - 1900, 3, 22, 15, 30, 0))
-                .dataConclusao(new Date(2022 - 1900, 3, 26, 15, 30, 0))
                 .status(StatusTarefaDTO.CONCLUIDA)
                 .build();
 

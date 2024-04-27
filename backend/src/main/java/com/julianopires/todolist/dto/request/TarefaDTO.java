@@ -1,5 +1,6 @@
 package com.julianopires.todolist.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
@@ -15,11 +16,12 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TarefaDTO {
-    @NotBlank(message = "O campo 'título' não pode ser nulo ou vazio.")
     private String titulo;
     private String descricao;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date dataCriacao;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date dataConclusao;
     @Enumerated(EnumType.STRING)
-    private StatusTarefaDTO status;
+    private StatusTarefaDTO status = StatusTarefaDTO.PENDENTE;
 }

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TarefaServiceTest {
 
     @Autowired
-    private TarefaService tarefaService;
+    TarefaService tarefaService;
 
     @Autowired
     TarefaRepository tarefaRepository;
@@ -38,7 +38,7 @@ class TarefaServiceTest {
                 .id(1L)
                 .titulo(tarefaDTO.getTitulo())
                 .descricao(tarefaDTO.getDescricao())
-                .dataCriacao(tarefaDTO.getDataCriacao())
+                .dataCriacao(responseDTO.getDataCriacao())
                 .dataConclusao(tarefaDTO.getDataConclusao())
                 .status(tarefaDTO.getStatus())
                 .build();
@@ -63,17 +63,15 @@ class TarefaServiceTest {
     @Test
     void editarTarefa_DeveEditarTarefaComSucessoQuandoTarefaEncontrada() {
         TarefaDTO tarefaDTO = TarefaFixture.criarTarefa();
-        tarefaService.criarTarefa(tarefaDTO);
+        TarefaResponseDTO tarefaResponseDTO = tarefaService.criarTarefa(tarefaDTO);
 
         TarefaDTO tarefaEditada = TarefaFixture.criarTarefa2();
 
-        List<TarefaResponseDTO> tarefasDTO = tarefaService.buscarTodasTarefas();
+        TarefaResponseDTO responseEdicao = tarefaService.editarTarefa(tarefaEditada, tarefaResponseDTO.getId());
 
-        TarefaResponseDTO responseEdicao = tarefaService.editarTarefa(tarefaEditada, tarefasDTO.get(0).getId());
-
-        TarefaResponseDTO responseEsperada = TarefaFixture.criarTarefaResponseEdicao(tarefasDTO.get(0).getId());
-
-        assertEquals(responseEsperada, responseEdicao);
+        assertEquals(tarefaEditada.getTitulo(), responseEdicao.getTitulo());
+        assertEquals(tarefaEditada.getDescricao(), responseEdicao.getDescricao());
+        assertEquals(tarefaEditada.getStatus(), responseEdicao.getStatus());
     }
 
     @Test
@@ -92,7 +90,11 @@ class TarefaServiceTest {
         List<TarefaResponseDTO> tarefasDTO = tarefaService.buscarTodasTarefas();
 
         assertDoesNotThrow(() -> tarefaService.removerTarefa(tarefasDTO.get(0).getId()));
-        assertThrows(EntityNotFoundException.class, () -> tarefaService.buscarTarefa(tarefasDTO.get(0).getId()));
+
+        //busco novamente pra validar exclusao
+        List<TarefaResponseDTO> tarefas = tarefaService.buscarTodasTarefas();
+
+        assertEquals(tarefas.size(), 0);
     }
 
     @Test
