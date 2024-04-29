@@ -24,20 +24,20 @@ public class TarefaController {
     }
 
     @Operation(summary = "Visualizar todas tarefas")
-    @GetMapping("/visualizar")
+    @GetMapping()
     public ResponseEntity<List<TarefaResponseDTO>> visualizarTarefas() {
         List<TarefaResponseDTO> tarefasDTO = tarefaService.buscarTodasTarefas();
         return ResponseEntity.ok(tarefasDTO);
     }
 
     @Operation(summary = "Adicionar tarefa")
-    @PostMapping("/adicionar")
+    @PostMapping()
     public ResponseEntity<TarefaResponseDTO> adicionarTarefa(@RequestBody @Valid TarefaDTO tarefaDTO) {
         return new ResponseEntity<>(tarefaService.criarTarefa(tarefaDTO), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Editar tarefa")
-    @PutMapping("/editar/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<TarefaResponseDTO> editarTarefa(@RequestBody @Valid TarefaDTO tarefaDTO, @PathVariable Long id) {
         try {
             TarefaResponseDTO tarefaResponseDTO = tarefaService.editarTarefa(tarefaDTO, id);
@@ -48,7 +48,7 @@ public class TarefaController {
     }
 
     @Operation(summary = "Excluir tarefa")
-    @DeleteMapping("excluir/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<TarefaResponseDTO> excluirTarefa(@PathVariable Long id) {
         try {
             tarefaService.removerTarefa(id);

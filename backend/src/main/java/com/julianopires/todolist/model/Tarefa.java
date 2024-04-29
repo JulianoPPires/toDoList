@@ -21,6 +21,7 @@ public class Tarefa {
     private Long id;
     private String titulo;
     private String descricao;
+    @Nullable
     private Date dataCriacao;
     @Nullable
     private Date dataConclusao;

@@ -35,11 +35,7 @@ public class TarefaService {
     }
 
     public TarefaResponseDTO criarTarefa(TarefaDTO tarefaDTO) {
-        //se vier a data criacao do front eu uso senao seto direto no banckend
         Tarefa tarefa = modelMapper.map(tarefaDTO, Tarefa.class);
-        if (tarefaDTO.getDataCriacao() == null) {
-            tarefa.setDataCriacao(new Date());
-        }
         Tarefa tarefaSalva = tarefaRepository.save(tarefa);
         return modelMapper.map(tarefaSalva, TarefaResponseDTO.class);
     }

@@ -26,7 +26,7 @@ class TarefaControllerTest {
 
     @Test
     public void testRotaVizualizarTarefas() throws Exception {
-        this.mockMvc.perform(get("/api/v1/tarefas/visualizar")
+        this.mockMvc.perform(get("/api/v1/tarefas")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                 )
@@ -37,7 +37,7 @@ class TarefaControllerTest {
 
     @Test
     public void testRotaAdicionarTarefas() throws Exception {
-        this.mockMvc.perform(post("/api/v1/tarefas/adicionar")
+        this.mockMvc.perform(post("/api/v1/tarefas")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(TarefaControllerFixture.jsonAdicionarTarefa())
                         .accept(MediaType.APPLICATION_JSON)
